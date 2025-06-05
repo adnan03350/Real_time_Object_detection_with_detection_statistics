@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Object Detection | AI Vision</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .detection-container {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    #videoFeed {
+      width: 100%;
+      height: auto;
+      max-height: 480px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 8px;
+    }
+    .detection-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Live Object Detection</h1>
+      <p class="text-gray-600">Real-time object detection using your webcam</p>
+    </div>
+
+    <!-- Video Feed Container -->
+    <div class="detection-container mb-4 relative">
+      <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Live detection feed">
+      <div id="detectionLabel" class="detection-label hidden">person: 0.78</div>
+    </div>
+
+    <!-- Capture Button -->
+    <div class="text-center mb-8">
+      <button id="captureBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        <i class="fas fa-camera mr-2"></i>Capture
+      </button>
+    </div>
+
+    <!-- How to Use Section -->
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-6 max-w-md mx-auto">
+      <h3 class="font-medium text-gray-800 mb-2 flex items-center">
+        <i class="fas fa-info-circle text-blue-500 mr-2"></i>How to use
+      </h3>
+      <ul class="text-sm text-gray-600 space-y-1">
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-green-500 mt-1 mr-2 text-xs"></i>
+          <span>Make sure your camera is properly connected</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-green-500 mt-1 mr-2 text-xs"></i>
+          <span>Objects will be automatically detected in real-time</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-green-500 mt-1 mr-2 text-xs"></i>
+          <span>Click 'Capture' to save the current frame</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center">
+      <a href="/" class="inline-block px-4 py-2 text-gray-700 hover:text-gray-900 transition">
+        <i class="fas fa-arrow-left mr-1"></i>Back to Upload
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white text-center py-4 text-sm">
+    <p>© 2023 AI Vision Object Detection. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const videoFeed = document.getElementById('videoFeed');
+      const captureBtn = document.getElementById('captureBtn');
+      const detectionLabel = document.getElementById('detectionLabel');
+      
+      // Show detection label (simulated for demo)
+      setTimeout(() => {
+        detectionLabel.classList.remove('hidden');
+      }, 1000);
+      
+      // Capture frame
+      captureBtn.addEventListener('click', function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = videoFeed.videoWidth;
+        canvas.height = videoFeed.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
+        
+        const link = document.createElement('a');
+        link.download = `detection-${new Date().toISOString().slice(0,10)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detection Results | AI Vision</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .media-container {
+      min-height: 400px;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+    .stat-card {
+      transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .progress-bar {
+      height: 6px;
+      border-radius: 3px;
+    }
+    .object-badge {
+      transition: all 0.2s ease;
+    }
+    .object-badge:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="bg-indigo-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/" class="flex items-center space-x-2">
+        <i class="fas fa-robot text-2xl"></i>
+        <span class="text-xl font-bold">Real-Time Object Detection Using YOLO | AI Vision</span>
+      </a>
+      <div>
+        <a href="/" class="px-4 py-2 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition">
+          <i class="fas fa-upload mr-2"></i>New Upload
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Detection Results</h1>
+        <p class="text-gray-600">Detailed analysis of detected objects</p>
+      </div>
+
+      <!-- Media Comparison -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Original Media -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                <i class="fas fa-image text-indigo-500 mr-2"></i>Original
+              </h3>
+              <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                INPUT
+              </span>
+            </div>
+            <div class="media-container flex items-center justify-center">
+              {% if input_url %}
+                {% if input_url.endswith(('.mp4', '.mov', '.avi', '.webm')) %}
+                  <video controls class="w-full h-auto max-h-96 mx-auto" playsinline>
+                    <source src="{{ input_url }}" type="video/mp4">
+                  </video>
+                {% else %}
+                  <img src="{{ input_url }}" alt="Original media" class="w-full h-auto max-h-96 object-contain">
+                {% endif %}
+              {% else %}
+                <div class="text-center p-6 text-gray-500">
+                  <i class="fas fa-exclamation-circle text-4xl mb-3"></i>
+                  <p>Original file not available</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Detected Media -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden relative">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-semibold text-gray-800 flex items-center">
+                <i class="fas fa-search text-green-500 mr-2"></i>Detected Objects
+              </h3>
+              <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                RESULTS
+              </span>
+            </div>
+            <div class="media-container flex items-center justify-center">
+              {% if output_url %}
+                {% if output_url.endswith(('.mp4', '.mov', '.avi', '.webm')) %}
+                  <video controls class="w-full h-auto max-h-96 mx-auto" playsinline>
+                    <source src="{{ output_url }}" type="video/mp4">
+                  </video>
+                {% else %}
+                  <img src="{{ output_url }}" alt="Detected objects" class="w-full h-auto max-h-96 object-contain">
+                {% endif %}
+              {% else %}
+                <div class="text-center p-6 text-gray-500">
+                  <i class="fas fa-exclamation-triangle text-4xl mb-3 text-yellow-500"></i>
+                  <p>Detection results not available</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="absolute -top-3 -right-3">
+            <span class="relative flex h-8 w-8">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-8 w-8 bg-green-500 items-center justify-center text-white text-xs font-bold">AI</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detection Statistics -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <i class="fas fa-chart-pie text-blue-500 mr-3"></i>
+          Detection Statistics
+        </h2>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <!-- Processing Time -->
+          <div class="stat-card bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-blue-800 font-medium">Processing Time</div>
+                <div class="text-3xl font-bold text-blue-600">{{ "%.1f"|format(stats.time.total) }}<span class="text-lg">ms</span></div>
+              </div>
+              <div class="bg-blue-100 p-3 rounded-full">
+                <i class="fas fa-stopwatch text-blue-500 text-xl"></i>
+              </div>
+            </div>
+            {% if stats.fps > 0 %}
+            <div class="mt-2 text-sm text-blue-600">
+              <span class="font-medium">{{ stats.fps|round(1) }} FPS</span> average
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Objects Detected -->
+          <div class="stat-card bg-green-50 p-4 rounded-lg border border-green-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-green-800 font-medium">Objects Detected</div>
+                <div class="text-3xl font-bold text-green-600">{{ stats.objects.values()|sum }}</div>
+              </div>
+              <div class="bg-green-100 p-3 rounded-full">
+                <i class="fas fa-object-group text-green-500 text-xl"></i>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-green-600">
+              <span class="font-medium">{{ stats.objects|length }}</span> unique classes
+            </div>
+          </div>
+
+          <!-- Resolution -->
+          <div class="stat-card bg-purple-50 p-4 rounded-lg border border-purple-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-purple-800 font-medium">Resolution</div>
+                <div class="text-3xl font-bold text-purple-600">{{ stats.resolution }}</div>
+              </div>
+              <div class="bg-purple-100 p-3 rounded-full">
+                <i class="fas fa-expand text-purple-500 text-xl"></i>
+              </div>
+            </div>
+            <div class="mt-2 text-sm text-purple-600">
+              {{ stats.resolution.split('x')[0] }}px width
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Stats -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Object Breakdown -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-list-ol text-indigo-500 mr-2"></i>
+              Object Breakdown
+            </h3>
+            <div class="space-y-2">
+              {% if stats.objects %}
+                {% for obj, count in stats.objects.items() %}
+                <div class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-4 py-3 rounded-lg transition object-badge">
+                  <div class="flex items-center">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-1 rounded-full mr-3">
+                      {{ count }}
+                    </span>
+                    <span class="capitalize font-medium text-gray-700">{{ obj }}</span>
+                  </div>
+                  <span class="text-gray-500 text-sm">
+                    {{ ((count / stats.objects.values()|sum) * 100)|round(1) }}%
+                  </span>
+                </div>
+                {% endfor %}
+              {% else %}
+                <div class="text-center py-6 text-gray-500 bg-gray-50 rounded-lg">
+                  <i class="fas fa-eye-slash text-3xl mb-3"></i>
+                  <p>No objects were detected</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Performance Metrics -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <i class="fas fa-tachometer-alt text-blue-500 mr-2"></i>
+              Performance Metrics
+            </h3>
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="space-y-4">
+                <!-- Pre-processing -->
+                <div>
+                  <div class="flex justify-between mb-1 text-sm">
+                    <span class="font-medium text-gray-700">Pre-processing</span>
+                    <span class="font-medium text-blue-600">{{ "%.1f"|format(stats.time.preprocess) }}ms</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="progress-bar bg-blue-500" 
+                         style="width: {{ (stats.time.preprocess / stats.time.total * 100)|round(1) }}%"></div>
+                  </div>
+                </div>
+                
+                <!-- Inference -->
+                <div>
+                  <div class="flex justify-between mb-1 text-sm">
+                    <span class="font-medium text-gray-700">AI Inference</span>
+                    <span class="font-medium text-green-600">{{ "%.1f"|format(stats.time.inference) }}ms</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="progress-bar bg-green-500" 
+                         style="width: {{ (stats.time.inference / stats.time.total * 100)|round(1) }}%"></div>
+                  </div>
+                </div>
+                
+                <!-- Post-processing -->
+                <div>
+                  <div class="flex justify-between mb-1 text-sm">
+                    <span class="font-medium text-gray-700">Post-processing</span>
+                    <span class="font-medium text-purple-600">{{ "%.1f"|format(stats.time.postprocess) }}ms</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="progress-bar bg-purple-500" 
+                         style="width: {{ (stats.time.postprocess / stats.time.total * 100)|round(1) }}%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition flex items-center justify-center">
+          <i class="fas fa-upload mr-2"></i>Upload Another
+        </a>
+        <a href="/realtime" class="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center justify-center">
+          <i class="fas fa-video mr-2"></i>Live Detection
+        </a>
+        {% if output_url and not output_url.endswith(('.mp4', '.mov', '.avi', '.webm')) %}
+        <a href="{{ output_url }}" download class="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition flex items-center justify-center">
+          <i class="fas fa-download mr-2"></i>Download Result
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p>© Real-Time Object Detection Using YOLO.</p>
+    </div>
+  </footer>
+</body>
+</html>

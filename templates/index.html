@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Object Detection | Upload</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .file-upload {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border: 2px dashed #4b5563;
+      transition: all 0.3s ease;
+    }
+    .file-upload:hover {
+      border-color: #3b82f6;
+      background: linear-gradient(135deg, #e6f0ff 0%, #b8d1ff 100%);
+    }
+    .file-upload.dragover {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    }
+    #preview {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="bg-indigo-600 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fas fa-robot text-2xl"></i>
+        <span class="text-xl font-bold">Real-Time Object Detection Using YOLO | AI Vision</span>
+      </div>
+      <div>
+        <a href="/realtime" class="px-4 py-2 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition">
+          <i class="fas fa-video mr-2"></i>Live Detection
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden animate__animated animate__fadeIn">
+      <div class="p-8">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-800 mb-2">Object Detection</h1>
+          <p class="text-gray-600">Upload an image or video to detect objects using AI</p>
+        </div>
+
+        <!-- Upload Form -->
+        <form action="/predict" method="POST" enctype="multipart/form-data" class="space-y-6">
+          <div id="dropZone" class="file-upload rounded-lg p-8 text-center cursor-pointer">
+            <input type="file" name="file" id="fileInput" accept="image/*,video/*" class="hidden" required>
+            <div class="flex flex-col items-center justify-center space-y-3">
+              <i class="fas fa-cloud-upload-alt text-4xl text-indigo-500"></i>
+              <h3 class="text-lg font-medium text-gray-700">Drag & drop files here</h3>
+              <p class="text-sm text-gray-500">or click to browse</p>
+              <button type="button" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                Select File
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div id="preview" class="rounded-lg overflow-hidden bg-gray-100 flex justify-center items-center min-h-48">
+            <div class="text-center p-6 text-gray-500">
+              <i class="fas fa-image text-3xl mb-2"></i>
+              <p>Preview will appear here</p>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-105 shadow-lg">
+              <i class="fas fa-search mr-2"></i> Detect Objects
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p>© Real-Time Object Detection Using YOLO.</p>
+    </div>
+  </footer>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const selectBtn = dropZone.querySelector('button');
+
+    // Handle click on drop zone
+    selectBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.onchange = function() {
+      handleFiles(this.files);
+    };
+
+    // Handle drag and drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+      dropZone.classList.add('dragover');
+    }
+
+    function unhighlight() {
+      dropZone.classList.remove('dragover');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles(files);
+      fileInput.files = files; // Assign files to input
+    }
+
+    function handleFiles(files) {
+      preview.innerHTML = '';
+      
+      if (files.length > 0) {
+        const file = files[0];
+        const url = URL.createObjectURL(file);
+        
+        if (file.type.startsWith('image')) {
+          const img = document.createElement('img');
+          img.src = url;
+          img.className = 'max-h-80 w-auto object-contain';
+          img.onload = () => {
+            preview.innerHTML = '';
+            preview.appendChild(img);
+          };
+        } else if (file.type.startsWith('video')) {
+          const video = document.createElement('video');
+          video.src = url;
+          video.controls = true;
+          video.className = 'max-h-80 w-auto';
+          preview.innerHTML = '';
+          preview.appendChild(video);
+        } else {
+          preview.innerHTML = `
+            <div class="text-center p-6 text-gray-500">
+              <i class="fas fa-exclamation-triangle text-3xl mb-2 text-yellow-500"></i>
+              <p>Preview not available for this file type</p>
+            </div>
+          `;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

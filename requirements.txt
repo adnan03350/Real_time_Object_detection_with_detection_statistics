@@ -1,0 +1,30 @@
+# Core Packages
+flask==2.3.2
+python-dotenv==1.0.0
+
+# Computer Vision & AI
+torch==2.0.1
+torchvision==0.15.2
+ultralytics==8.0.196  # YOLOv8
+opencv-python==4.8.0.76
+opencv-contrib-python==4.8.0.76
+
+# Video Processing
+ffmpeg-python==0.2.0
+imageio==2.31.1
+imageio-ffmpeg==0.4.8
+
+# Utilities
+numpy==1.24.3
+pandas==2.0.3
+tqdm==4.65.0
+pillow==9.5.0
+requests==2.31.0
+
+# Deployment
+gunicorn==20.1.0
+gevent==22.10.2
+
+# Development (Optional)
+python-multipart==0.0.6  # For file uploads
+werkzeug==2.3.6  # WSGI utility

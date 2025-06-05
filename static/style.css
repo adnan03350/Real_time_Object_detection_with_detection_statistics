@@ -1,0 +1,310 @@
+/* ================ */
+/* CSS Variables */
+/* ================ */
+:root {
+  --primary: #4f46e5;       /* indigo-600 */
+  --primary-hover: #4338ca; /* indigo-700 */
+  --secondary: #10b981;     /* emerald-500 */
+  --secondary-hover: #0d9f6e; /* emerald-600 */
+  --accent: #7c3aed;        /* purple-600 */
+  --accent-hover: #6d28d9;  /* purple-700 */
+  --light: #f8fafc;         /* slate-50 */
+  --dark: #1e293b;          /* slate-800 */
+  --gray: #64748b;          /* slate-500 */
+  --success: #10b981;       /* emerald-500 */
+  --warning: #f59e0b;       /* amber-500 */
+  --error: #ef4444;         /* red-500 */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-lg: 1rem;
+  --transition: all 0.3s ease;
+}
+
+/* ================ */
+/* Base Styles */
+/* ================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================ */
+/* Typography */
+/* ================ */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+/* ================ */
+/* Components */
+/* ================ */
+/* Navigation */
+.navbar {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: var(--shadow);
+  padding: 1rem 0;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: white;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Cards */
+.card {
+  background-color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Forms */
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* File Upload */
+.file-upload {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border: 2px dashed #94a3b8;
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.file-upload:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, #e6f0ff 0%, #b8d1ff 100%);
+}
+
+.file-upload.dragover {
+  border-color: var(--success);
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+/* Media Containers */
+.media-container {
+  background: var(--light);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.media-container img,
+.media-container video {
+  max-width: 100%;
+  max-height: 24rem;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.badge-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.badge-secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+
+/* ================ */
+/* Layout */
+/* ================ */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.footer {
+  background-color: var(--dark);
+  color: white;
+  padding: 1.5rem 0;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* ================ */
+/* Utilities */
+/* ================ */
+.text-center { text-align: center; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-8 { margin-bottom: 2rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.rounded-lg { border-radius: var(--radius); }
+.shadow-md { box-shadow: var(--shadow); }
+
+/* Animations */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ================ */
+/* Responsive */
+/* ================ */
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
