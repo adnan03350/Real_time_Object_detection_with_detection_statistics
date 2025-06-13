@@ -1,8 +1,8 @@
 
 # Flask App Setup G
-<img width="355" alt="43" src="https://github.com/user-attachments/assets/d726c350-df3f-40a3-9263-8ef6c78247b4" />
+<img width="600" alt="43" src="https://github.com/user-attachments/assets/d726c350-df3f-40a3-9263-8ef6c78247b4" />
 uide
-<img width="413" alt="2" src="https://github.com/user-attachments/assets/3f098917-6981-43aa-a3e2-54a63f92a3d1" />
+<img width="600" alt="2" src="https://github.com/user-attachments/assets/3f098917-6981-43aa-a3e2-54a63f92a3d1" />
 Real-Time 
 <img width="600" alt="22" src="https://github.com/user-attachments/assets/b770004e-e66b-4058-b079-1f2690ce1bcb" />
 
